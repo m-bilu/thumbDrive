@@ -1,0 +1,43 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
+
+.container {
+    display: flex;
+    margin: 10px;
+}
+
+.left {
+    width: 20rem;
+}
+
+.right {
+    background-color: white;
+    height: 2rem;
+    margin-top: 5px;
+    font-family: 'Roboto';
+}
+
+// Used on left side, to add new note
+.button {
+    width: 15rem;
+    height: 2rem;
+    cursor: pointer;
+    background-color: black;
+    color: whitesmoke;
+    border: black;
+    font-family: 'Roboto';
+}
+
+.inputContainer {
+    margin-top: 5px;
+}
+
+
+.input{
+    width: 15rem;
+    height: 2rem;
+    outline: none;
+    border-radius: 5px;
+    border: 1px solid gray;
+    margin: 5px 0;
+}
