@@ -1,6 +1,14 @@
 // if import is not names, default export from this file will be function below
 import styles from '@/styles/evernote.module.scss'
 import { useState } from 'react'
+import { app, database } from '../../firebaseConfig'
+import { collection, addDoc } from 'firebase/firestore'
+import dynamic from 'next/dynamic'
+const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
+import 'react-quill/dist/quill.snow.css';
+// addDoc adds our data to our collection'
+// collection instantiates our collection
+
 
 export default function NoteOperations() {
     // React Hooks, useState Hook, constructor returns an array of two items
@@ -9,11 +17,28 @@ export default function NoteOperations() {
     // https://blog.logrocket.com/a-guide-to-usestate-in-react-ecb9952e406c/
     // useState() takes the initial value of the state variable as an argument.
     const [isInputVisible, setInputVisible] = useState(false);
+    const [noteTitle, setNoteTitle] = useState('');
+    const [noteDesc, setNoteDesc] = useState('');
+
+    const dbInstance = collection(database, 'notes')  
+    // databse from firebaseConfig import, name of collection
 
     // Function Declaration in Typescript:
     // https://www.typescriptlang.org/docs/handbook/2/functions.html
     const inputToggle = () => {
         setInputVisible(!isInputVisible)
+    }
+    const saveNote = () => { // Sends one piece of data to db, note name. (JSON)
+        addDoc(dbInstance, {
+            noteTitle: noteTitle,
+            noteDesc: noteDesc
+        }).then(() => {
+            setNoteTitle('')
+            setNoteDesc('')
+        })
+    }
+    const addDesc = (value : string) => {
+        setNoteDesc(value)
     }
 
     return (
@@ -29,8 +54,26 @@ export default function NoteOperations() {
             </div>
 
             {isInputVisible ? (
-                <div className={styles.inputContainer}>
-                    <input placeholder='Enter the Title..'/>    
+                <div>
+                    <div className={styles.inputContainer}>
+                        <input 
+                        className={styles.input}
+                        placeholder='Enter Title..'
+                        onChange={(title) => setNoteTitle(title.target.value)}
+                        value={noteTitle}/>    
+                        
+                        <div className={styles.ReactQuill}>
+                            <ReactQuill 
+                            onChange={addDesc}
+                            value={noteDesc}/>
+                        </div>
+
+                    </div>
+                    <button 
+                        className={styles.saveBtn} 
+                        onClick={saveNote}>
+                        Save Note
+                    </button>
                 </div>
             ) : (
                 <></>
@@ -38,4 +81,6 @@ export default function NoteOperations() {
 
         </>
     )
+
+    // At this point, we have saved our data. We must send it to a database like Firebase.
 }

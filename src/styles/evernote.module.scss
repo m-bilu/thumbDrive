@@ -1,5 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 
+// Defining variables for colours
+$dark_red: rgb(119, 27, 27);
+$black: black;
+$whiteSmoke: whiteSmoke;
+$grey:grey;
+
 
 .container {
     display: flex;
@@ -13,7 +19,7 @@
 .right {
     background-color: white;
     height: 2rem;
-    margin-top: 5px;
+    margin-top: 5px;    
     font-family: 'Roboto';
 }
 
@@ -40,4 +46,21 @@
     border-radius: 5px;
     border: 1px solid gray;
     margin: 5px 0;
+}
+
+.saveBtn {
+    width: 15rem;
+    height: 2rem;
+    cursor: pointer;
+    background-color: $dark-red;
+    color: $whiteSmoke;
+    border: $dark-red;
+    font-family: 'Roboto';
+    margin: 5px 0;
+    
+}
+
+.ReactQuill {
+    width: 15rem;
+    margin: 10px 0;
 }
