@@ -1,8 +1,8 @@
 // if import is not names, default export from this file will be function below
 import styles from '@/styles/evernote.module.scss'
-import { useState } from 'react'
+import { useState, useEffect } from 'react' // Hooks
 import { app, database } from '../../firebaseConfig'
-import { collection, addDoc } from 'firebase/firestore'
+import { collection, addDoc, getDocs } from 'firebase/firestore'
 import dynamic from 'next/dynamic'
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 import 'react-quill/dist/quill.snow.css';
@@ -10,7 +10,10 @@ import 'react-quill/dist/quill.snow.css';
 // collection instantiates our collection
 
 
-export default function NoteOperations() {
+export const dbInstance = collection(database, 'notes')  
+// databse from firebaseConfig import, name of collection
+
+export default function NoteOperations(props: any) {
     // React Hooks, useState Hook, constructor returns an array of two items
     // 1) State Variable 2) function to update the state variable
     // Can declare multiple state variables
@@ -19,9 +22,9 @@ export default function NoteOperations() {
     const [isInputVisible, setInputVisible] = useState(false);
     const [noteTitle, setNoteTitle] = useState('');
     const [noteDesc, setNoteDesc] = useState('');
+    const arr : any[] = [];
+    const [notesArray, setNotesArray] = useState(arr);
 
-    const dbInstance = collection(database, 'notes')  
-    // databse from firebaseConfig import, name of collection
 
     // Function Declaration in Typescript:
     // https://www.typescriptlang.org/docs/handbook/2/functions.html
@@ -35,11 +38,29 @@ export default function NoteOperations() {
         }).then(() => {
             setNoteTitle('')
             setNoteDesc('')
+            getNotes()
         })
     }
     const addDesc = (value : string) => {
         setNoteDesc(value)
     }
+    const getNotes = () => {
+
+        getDocs(dbInstance)
+            .then((data) => {
+                
+                setNotesArray(data.docs.map((item) => {
+                    return { ...item.data(), id: item.id }
+                }));
+            })
+
+    }
+
+    // useEffect hook runs whenever the page is refreshed. Empty dependency array implies
+    //  that every render will cause rerun. Return type is an undo function.
+    useEffect(() => {
+        getNotes();
+    }, [])
 
     return (
 
@@ -79,8 +100,23 @@ export default function NoteOperations() {
                 <></>
             )}
 
+            <div className={styles.notesList}>
+                {notesArray.map((note) => {
+                    return (
+                        <div key={note.id}
+                        className={styles.notesInner}
+                        onClick={() => props.getSingleNote(note.id)}>
+                            <h4>{note.noteTitle}</h4>
+                            
+                        </div>
+                    )
+                })}
+            </div>
+
         </>
     )
+
+    // <div dangerouslySetInnerHTML={{ __html: note.noteDesc }}></div>
 
     // At this point, we have saved our data. We must send it to a database like Firebase.
 }

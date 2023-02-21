@@ -60,7 +60,32 @@ $grey:grey;
     
 }
 
-.ReactQuill {
+.Reactquill {
     width: 15rem;
     margin: 10px 0;
+}
+
+.notesInner{
+    margin-top: 0.5rem;
+    border: 1px solid $dark-red;
+    border-radius: 10px;
+    width: 15rem;
+    text-align: center;
+    cursor: pointer;
+    font-family: "Roboto";
+}
+
+.notesInner:hover{ // Once mouse hovers over something in this div
+    background-color: rgb(119, 27, 27);
+    color: $whiteSmoke;
+}
+
+.editBtn, .deleteBtn{
+    width: 5rem;
+    height: 2rem;
+    background-color: rgb(119, 27, 27);
+    color: $whiteSmoke;
+    border: None;
+    cursor: pointer;
+    margin: 10px 10px 10px 0;
 }
